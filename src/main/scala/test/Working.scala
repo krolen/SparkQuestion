@@ -29,9 +29,6 @@ class Working extends LazyLogging {
       .foreachRDD((kafkaRdd: RDD[ConsumerRecord[String, String]]) => {
         val offsetRanges = kafkaRdd.asInstanceOf[HasOffsetRanges].offsetRanges
 
-        val initialRecords = kafkaRdd.count()
-        logger.info(s"Initial records: $initialRecords")
-
         // this is ugly we have to repeat it - but argonaut is NOT serializable...
         val rdd: RDD[SimpleData] = kafkaRdd.mapPartitions((records: Iterator[ConsumerRecord[String, String]]) => {
           import argonaut.Argonaut.StringToParseWrap

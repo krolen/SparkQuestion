@@ -32,9 +32,6 @@ class NotWorking extends LazyLogging {
         val offsetRanges = kafkaRdd.asInstanceOf[HasOffsetRanges].offsetRanges
         import argonaut.Argonaut.StringToParseWrap
 
-        val initialRecords = kafkaRdd.count()
-        logger.info(s"Initial records: $initialRecords")
-
         val rdd: RDD[SimpleData] = kafkaRdd.mapPartitions((records: Iterator[ConsumerRecord[String, String]]) => {
           val invalidCount: AtomicLong = new AtomicLong(0)
           val convertedData: Iterator[SimpleData] = records.map(record => {
